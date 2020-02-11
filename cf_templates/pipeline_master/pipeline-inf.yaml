@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+   This creates the pipeline it requires that pipeline-iam.yaml is run first
+
+
+Parameters:
+  SourceBucket:
+    Type: String
+    Default: com.aws.dhenton.pipeline.input
+  SourceObjectKey:
+    Type: String
+    Default: deploy.zip 
+  ArtifactBucket:
+    Type: String
+    Default: com.aws.dhenton.pipeline.output
+  System:
+    Type: String
+    Default: bonzo
+Resources:
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !ImportValue bonzo-PipelineRoleARN    
+      ArtifactStore:
+        Type: S3
+        Location:  !Ref ArtifactBucket
+      RestartExecutionOnUpdate: true
+      Stages:
+        - Name: Source
+          Actions:
+            - Name:  source-step
+              ActionTypeId:
+                Category: Source
+                Owner:  AWS
+                Version: 1
+                Provider: S3
+              Configuration: 
+                S3Bucket: !Ref SourceBucket
+                S3ObjectKey: !Ref SourceObjectKey
+                PollForSourceChanges: false
+              RunOrder: 1
+              OutputArtifacts:
+                - Name: DeployZip
+              RunOrder: 1
+        - Name: iam-changeset
+          Actions:
+          # create change set and execute change set for sample iam things
+            - Name: iam-CreateChangeSet
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name: DeployZip
+              OutputArtifacts: []
+              RunOrder: 1
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                Capabilities: CAPABILITY_NAMED_IAM
+                ChangeSetName: iam-changeset
+                RoleArn: !ImportValue bonzo-CFNRoleARN
+                StackName: !Sub  '${System}-iam-stack'
+                TemplatePath: DeployZip::deploy/templates/iam.yaml
+                TemplateConfiguration: DeployZip::deploy/parameters/iam.json
+            - Name: iam-DoChangeSet
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              InputArtifacts: []
+              OutputArtifacts: []
+              RunOrder: 2
+              Configuration:
+                ActionMode: CHANGE_SET_EXECUTE
+                Capabilities: CAPABILITY_NAMED_IAM
+                ChangeSetName: iam-changeset
+                RoleArn:  !ImportValue bonzo-CFNRoleARN
+                StackName: !Sub  '${System}-iam-stack'

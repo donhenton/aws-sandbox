@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+   This creates the logging bucket for S3 websites
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AWS::Region}.com.awsdhenton.logging.bucket"
+Outputs:
+  FQDNBucket:
+    Description: FQDNBucket of the Bucket suitable for cloudfront logging entry
+    Value: !GetAtt S3Bucket.DomainName
+    Export:
+      Name: !Sub '${AWS::Region}-awsdhenton-LoggingBucket-FQDN'
+  LoggingBucket:
+    Description: Logging Bucket
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub '${AWS::Region}-awsdhenton-LoggingBucket'

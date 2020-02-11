@@ -1,0 +1,53 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Docker Repository Setup",
+    "Metadata": {
+        "AWS::CloudFormation::Designer": {
+            "69ede0ad-de80-4de2-b07e-8df7016ff982": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 449.6297042086936,
+                    "y": 123.70125580057697
+                },
+                "z": 0
+            }
+        }
+    },
+    "Resources": {
+        "ECRRepo": {
+            "Type": "AWS::ECR::Repository",
+            "Properties": {
+                "RepositoryName": "awsdhenton-repo",
+                "RepositoryPolicyText": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Sid": "AllowPushPull",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "AWS": [
+                                "arn:aws:iam::235926060045:user/testuser"
+                            ]
+                        },
+                        "Action": [
+                            "ecr:GetDownloadUrlForLayer",
+                            "ecr:BatchGetImage",
+                            "ecr:BatchCheckLayerAvailability",
+                            "ecr:PutImage",
+                            "ecr:InitiateLayerUpload",
+                            "ecr:UploadLayerPart",
+                            "ecr:CompleteLayerUpload"
+                        ]
+                    }]
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "69ede0ad-de80-4de2-b07e-8df7016ff982"
+                }
+            }
+        }
+    }
+}

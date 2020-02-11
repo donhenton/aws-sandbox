@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  version: 1.0.0
+  'AWS::CloudFormation::Designer':
+    b5ea27d5-e02f-46a7-8b4a-f486c7f77a54:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 90
+      z: 1
+      embeds: []
+    ec327776-22c0-4199-b033-d60933641b94:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 180
+        'y': 90
+      z: 1
+      embeds: []
+      dependson:
+        - b5ea27d5-e02f-46a7-8b4a-f486c7f77a54
+    c995b333-a155-48ab-b137-f86f80af0cf9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 210
+      z: 1
+      embeds: []
+Description: |
+  Various Samples of IAM permissions and IAM Roles for various things
+Parameters:
+  AccountName:
+    Type: String
+    Description: AWS Account Alias
+    Default: Fred
+  System:
+    Description: Application Name
+    Type: String
+    Default: Bonzo
+  AppEnvPurpose:
+    Description: Environment name
+    Type: String
+    Default: dev
+Resources:
+  LambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub '${System}-LambdaRole-${AppEnvPurpose}-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: LambdaPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Action:
+                  - 'ssm:DescribeParameters'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'ssm:GetParameter'
+                Resource:
+                  - !Sub >-
+                    arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${System}/*
+              - Effect: Allow
+                Action:
+                  - 'kms:Decrypt'
+                Resource: '*'
+                 
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c995b333-a155-48ab-b137-f86f80af0cf9
+  MainEC2role:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub 'main-${System}-ec2-${AppEnvPurpose}'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: AllowServicestoAssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: EC2Mgmt
+          PolicyDocument:
+            Statement:
+              - Sid: AllowEC2Messages
+                Effect: Allow
+                Action:
+                  - 'ec2messages:AcknowledgeMessage'
+                  - 'ec2messages:DeleteMessage'
+                  - 'ec2messages:FailMessage'
+                  - 'ec2messages:GetEndpoint'
+                  - 'ec2messages:GetMessages'
+                  - 'ec2messages:SendReply'
+                Resource: '*'
+              - Sid: AllowCloudwatchMetrics
+                Effect: Allow
+                Action:
+                  - 'cloudwatch:PutMetricData'
+                Resource: '*'
+              - Sid: AllowDescribeInstances
+                Effect: Allow
+                Action:
+                  - 'ec2:DescribeInstanceStatus'
+                Resource: '*'
+              - Sid: AllowDS
+                Effect: Allow
+                Action:
+                  - 'ds:CreateComputer'
+                  - 'ds:DescribeDirectories'
+                Resource: '*'
+              - Sid: CloudWatchLogsAccess
+                Effect: Allow
+                Action:
+                  - 'logs:PutLogEvents'
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:DescribeLogGroups'
+                  - 'logs:DescribeLogStreams'
+                Resource:
+                  - !Sub 'arn:aws:logs:*:*:log-group:/main/${System}/ec2*'
+            Version: 2012-10-17
+        - PolicyName: S3Access
+          PolicyDocument:
+            Statement:
+              - Sid: AllowS3ListAllBucketsAccess
+                Effect: Allow
+                Action:
+                  - 's3:ListAllMyBuckets'
+                Resource: 'arn:aws:s3:::*'
+              - Sid: AllowS3BucketGetAccessBootstrap
+                Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                Resource:
+                  - !Sub >-
+                    arn:aws:s3:::${AccountName}-provisioning-bootstrap-${AWS::Region}/*
+            Version: 2012-10-17
+        - PolicyName: AllowEC2MgmtAndBootstrap
+          PolicyDocument:
+            Statement:
+              - Sid: AllowSSMPatching
+                Effect: Allow
+                Action:
+                  - 'ssm:ListAssociations'
+                  - 'ssm:ListInstanceAssociations'
+                  - 'ssm:PutInventory'
+                  - 'ssm:PutComplianceItems'
+                  - 'ssm:PutConfigurePackageResult'
+                  - 'ssm:UpdateAssociationStatus'
+                  - 'ssm:UpdateInstanceAssociationStatus'
+                  - 'ssm:UpdateInstanceInformation'
+                Resource: '*'
+              - Sid: EC2DescribeTags
+                Effect: Allow
+                Action:
+                  - 'ec2:DescribeTags'
+                Resource: '*'
+              - Sid: AllowSSMParameter
+                Effect: Allow
+                Action:
+                  - 'ssm:Get*'
+                  - 'ssm:Describe*'
+                Resource:
+                  - !Sub 'arn:aws:ssm:*:*:parameter/provisioning-bootstrap/config/*'
+              - Sid: AllowSSMKMSParameter
+                Effect: Allow
+                Action:
+                  - 'kms:Decrypt'
+                  - 'kms:DescribeKey'
+                Resource:
+                  - !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/smurf'
+            Version: 2012-10-17
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b5ea27d5-e02f-46a7-8b4a-f486c7f77a54
+  MainEC2roleInstanceProfile:
+    DependsOn: MainEC2role
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref MainEC2role
+      InstanceProfileName: !Ref MainEC2role
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ec327776-22c0-4199-b033-d60933641b94
+Outputs:
+  LambdaRoleARN:
+    Description: LambdaRole ARN
+    Value: !GetAtt LambdaRole.Arn
+    Export:
+      Name: !Sub '${System}-LambdaRoleARN-${AppEnvPurpose}'
+  MainEC2RoleARN:
+    Description: Main EC2 Role ARN
+    Value: !GetAtt MainEC2role.Arn
+    Export:
+      Name: !Sub '${System}-MainEC2RoleARN-${AppEnvPurpose}'

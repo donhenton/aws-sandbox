@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+   This creates the pipeline pipeline and is run first
+Parameters:
+  System:
+    Type: String
+    Default: bonzo
+Resources:
+    PipelineRole:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        RoleName: !Sub '${System}-PipelineRole-${AWS::Region}'
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - codepipeline.amazonaws.com
+              Action: 'sts:AssumeRole'
+    CFNRole:
+      Type: 'AWS::IAM::Role'
+      Properties:
+        RoleName: !Sub '${System}-CFNRole-${AWS::Region}'
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - cloudformation.amazonaws.com
+              Action: 'sts:AssumeRole'
+    PipelinePolicy:
+        Type: 'AWS::IAM::Policy'
+        Properties:
+            Roles: 
+                - !Ref PipelineRole
+                - !Ref CFNRole
+            PolicyName: PipelinePolicyItem
+            PolicyDocument:
+                    Version: '2012-10-17'
+                    Statement:
+                        -
+                            Sid: PassRole
+                            Effect: Allow
+                            Action: 'iam:PassRole'
+                            Resource: '*'
+                            Condition:
+                                StringEqualsIfExists:
+                                    'iam:PassedToService':
+                                        - cloudformation.amazonaws.com
+                                        - elasticbeanstalk.amazonaws.com
+                                        - ec2.amazonaws.com
+                                        - ecs-tasks.amazonaws.com
+                        -
+                            Sid: PipelinePermissions
+                            Effect: Allow
+                            Action:
+                                - 'sns:*'
+                                - 'codedeploy:CreateDeployment'
+                                - 'lambda:ListFunctions'
+                                - 'codedeploy:GetApplicationRevision'
+                                - 'codedeploy:RegisterApplicationRevision'
+                                - 's3:*'
+                                - 'iam:*'
+                                - 'lambda:InvokeFunction'
+                                - 'codedeploy:GetDeploymentConfig'
+                                - 'cloudformation:*'
+                                - 'codebuild:BatchGetBuilds'
+                                - 'cloudwatch:*'
+                                - 'codedeploy:GetDeployment'
+                                - 'codebuild:StartBuild'
+                                - 'codedeploy:GetApplication'
+                            Resource: '*'
+
+Outputs:
+    PipelineRoleARN:
+        Description: ARN of PipelineRole
+        Value: !GetAtt PipelineRole.Arn
+        Export: 
+            Name: !Sub "${System}-PipelineRoleARN"
+    CFNRoleARN:
+        Description:  ARN of CFNRole
+        Value: !GetAtt CFNRole.Arn
+        Export: 
+            Name: !Sub "${System}-CFNRoleARN"

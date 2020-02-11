@@ -1,0 +1,9 @@
+/src/main/resources/application.properties
+/target/
+*.cpt
+mainId.properties
+secrets.txt
+cf_templates/pipeline_master/deploy.zip
+.classpath
+.settings/
+.project

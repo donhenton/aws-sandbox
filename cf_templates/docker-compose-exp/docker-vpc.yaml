@@ -1,0 +1,324 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+   Creates a single public subnet with an EC2 instance that contains the Docker, Docker Compose, the CodeDeploy
+   Agent, an Internet Gateway, and the proper CodeDeploy Role/Profile for the EC2 Instance
+Metadata:
+  'AWS::CloudFormation::Designer':
+    06aa7cb0-cf30-458c-87a4-05cb73cbe7f4:
+      size:
+        width: 500
+        height: 340
+      position:
+        x: 140
+        'y': -70
+      z: 0
+      embeds:
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - 84cca30f-e3d0-407d-8bd3-76ac3f7b98d2
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - ac9d8fa3-928f-43f6-8c04-6031fba4aff4
+    65699d6a-f842-4e05-8e0d-457b382bc29b:
+      size:
+        width: 140
+        height: 140
+      position:
+        x: 245.73371352255265
+        'y': -26.813089656753903
+      z: 1
+      parent: 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+      embeds:
+        - c53ee20f-343f-44cf-91de-f598b8aaaab0
+      iscontainedinside:
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+    c53ee20f-343f-44cf-91de-f598b8aaaab0:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 288.48131217498957
+        'y': 30.054667754482352
+      z: 2
+      parent: 65699d6a-f842-4e05-8e0d-457b382bc29b
+      embeds: []
+      iscontainedinside:
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+        - 65699d6a-f842-4e05-8e0d-457b382bc29b
+      dependson:
+        - 244e8c98-97e8-49dc-a62b-b7e8202babb9
+    84cca30f-e3d0-407d-8bd3-76ac3f7b98d2:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 490
+        'y': -60
+      z: 1
+      parent: 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+      embeds: []
+      iscontainedinside:
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+    bd7d6fbd-afa1-4458-91d9-46eef54e03bb:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 0
+        'y': 120
+      z: 0
+      embeds: []
+    ec141bb6-5517-4e29-a9a5-7fdeed77a555:
+      source:
+        id: 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+      target:
+        id: bd7d6fbd-afa1-4458-91d9-46eef54e03bb
+      z: 0
+    f807d780-4abe-4ce5-8fef-9b33063fe874:
+      size:
+        width: 117.87597733797128
+        height: 123.59776783748174
+      position:
+        x: 430
+        'y': 20
+      z: 1
+      parent: 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+      embeds:
+        - 244e8c98-97e8-49dc-a62b-b7e8202babb9
+      iscontainedinside:
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+        - 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+    244e8c98-97e8-49dc-a62b-b7e8202babb9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 457.87597733797134
+        'y': 43.59776783748174
+      z: 2
+      parent: f807d780-4abe-4ce5-8fef-9b33063fe874
+      embeds: []
+      isassociatedwith:
+        - bd7d6fbd-afa1-4458-91d9-46eef54e03bb
+      iscontainedinside:
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+        - f807d780-4abe-4ce5-8fef-9b33063fe874
+      dependson:
+        - ec141bb6-5517-4e29-a9a5-7fdeed77a555
+    5f333ce6-1948-44aa-b2ec-446ca1f4b88b:
+      source:
+        id: f807d780-4abe-4ce5-8fef-9b33063fe874
+      target:
+        id: 65699d6a-f842-4e05-8e0d-457b382bc29b
+      z: 1
+    ac9d8fa3-928f-43f6-8c04-6031fba4aff4:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 170
+        'y': 10
+      z: 1
+      parent: 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+      embeds: []
+      isassociatedwith:
+        - c53ee20f-343f-44cf-91de-f598b8aaaab0
+Resources:
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      CidrBlock: 12.0.0.0/16
+      Tags:
+        - Key: Name
+          Value: Docker-Exp
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 06aa7cb0-cf30-458c-87a4-05cb73cbe7f4
+  PublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 12.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: PublicSubnet
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 65699d6a-f842-4e05-8e0d-457b382bc29b
+  SecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: SecurityGroup
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Ref SSHLocation
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 84cca30f-e3d0-407d-8bd3-76ac3f7b98d2
+  IGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: bd7d6fbd-afa1-4458-91d9-46eef54e03bb
+  EC2VPCG43WT4:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref IGateway
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ec141bb6-5517-4e29-a9a5-7fdeed77a555
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: f807d780-4abe-4ce5-8fef-9b33063fe874
+  InternetRoute:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: !Ref PublicRouteTable
+      GatewayId: !Ref IGateway
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 244e8c98-97e8-49dc-a62b-b7e8202babb9
+    DependsOn:
+      - EC2VPCG43WT4
+  EC2SRTA3TOTU:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5f333ce6-1948-44aa-b2ec-446ca1f4b88b
+  WebServerInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !ImportValue codedeploy-iam-InstanceProfile
+      ImageId: !Ref ImageId
+      Tags:
+        - Key: Name
+          Value: DockerExpServer
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+        - GroupSet:
+            - !Ref SecurityGroup
+          AssociatePublicIpAddress: 'true'
+          DeviceIndex: '0'
+          DeleteOnTermination: 'true'
+          SubnetId: !Ref PublicSubnet
+
+
+
+      UserData: !Base64 
+        'Fn::Join':
+          - ''
+          - - |
+              #!/bin/bash -xe
+            - |
+              yum update -y
+            - |
+              yum install ruby -y
+            - |
+              yum install docker -y
+            - |
+              usermod -a -G docker ec2-user
+            - |
+              /usr/bin/curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
+            - |
+              chmod +x /usr/local/bin/docker-compose
+            - |
+              service docker start
+            - |
+              chkconfig docker on
+            - |
+              cd ~
+            - |
+              /usr/bin/curl https://aws-codedeploy-us-east-2.s3.amazonaws.com/latest/install > install
+            - |
+              chmod +x ./install
+            - |
+              ./install auto
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c53ee20f-343f-44cf-91de-f598b8aaaab0
+    DependsOn:
+      - InternetRoute
+Parameters:
+  ImageId:
+    Description: AMI Image Id
+    Type: String
+    Default: ami-02ccb28830b645a41
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t1.micro
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+    ConstraintDescription: must be a valid EC2 instance type.
+  KeyName:
+    Description: Name of an EC2 KeyPair to enable SSH access to the instance.
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+    Default: CdkKeyPair
+  SSHLocation:
+    Description: ' The IP address range that can be used to access the web server using SSH.'
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+    ConstraintDescription: must be a valid IP CIDR range of the form x.x.x.x/x.
+Outputs:
+  VPCId:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: !Sub '${AWS::StackName}-VPCID'
+  URL:
+    Value: !Join 
+      - ''
+      - - 'http://'
+        - !GetAtt 
+          - WebServerInstance
+          - PublicIp
+    Description: Newly created application URL

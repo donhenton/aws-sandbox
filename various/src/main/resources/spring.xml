@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+          http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-4.2.xsd
+          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd
+">
+
+ <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+    <property name="ignoreUnresolvablePlaceholders" value="true" />
+    <property name="localOverride" value="false" />
+    <property name="locations">
+        <list>
+            <value>classpath:application.properties</value>
+           
+        </list>
+    </property>
+</bean>   
+    
+
+    <!-- String dbUrl, String region,AWSCredentials  credentials -->
+    
+    <bean id="amazonAWSCredentials" class="com.amazonaws.auth.BasicAWSCredentials">
+        <constructor-arg value="${amazon.aws.accesskey}" />
+        <constructor-arg value="${amazon.aws.secretkey}" />
+    </bean>
+    
+    <!-- import com.amazonaws.services.dynamodbv2.AmazonDynamoDB; -->
+    <bean id="amazonDynamoDbClientFactory" factory-method="build"
+           class="com.dhenton9000.aws.dynamo.spring.builder.SpringClientBuilder">
+        <constructor-arg index="0" value="${amazon.dynamodb.endpoint}" />
+        <constructor-arg index="1" value="${amazon.aws.region}" />
+        <constructor-arg index="2" ref="amazonAWSCredentials" />
+    </bean>
+    
+     <bean id="amazonDBMapper" class="com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper">
+        <constructor-arg ref="amazonDynamoDbClientFactory" />
+     </bean>
+    
+      <bean id="amazonDynamoDB" class="com.amazonaws.services.dynamodbv2.document.DynamoDB">
+    <constructor-arg ref="amazonDynamoDbClientFactory" />
+    
+    </bean>
+    
+</beans>

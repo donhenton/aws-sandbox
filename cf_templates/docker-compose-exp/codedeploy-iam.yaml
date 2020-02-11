@@ -1,0 +1,67 @@
+# https://theburningmonk.com/2019/05/cloudformation-protip-use-fnsub-instead-of-fnjoin/
+AWSTemplateFormatVersion: 2010-09-09
+Description: IAM permissions for codedeploy
+Parameters:
+    s3BucketName:
+        Description: The s3 bucket to use for code 
+        Type: String
+        Default: com.awsdhenton.deploy-bucket
+
+Resources:
+  awsdhentonEC2Role:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+  awsdhentonEC2InstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref awsdhentonEC2Role
+  awsdhentonEC2RolePolicies:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: awsdhentonEC2RolePolicies
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:Get*'
+              - 's3:List*'
+            Resource:
+              - !Sub 'arn:aws:s3:::${s3BucketName}/*'
+              - !Sub 'arn:aws:s3:::${s3BucketName}'
+          - Effect: Allow
+            Action:
+              - 'elasticloadbalancing:DeregisterInstancesFromLoadBalancer'
+              - 'elasticloadbalancing:DescribeInstanceHealth'
+              - 'elasticloadbalancing:DescribeLoadBalancerAttributes'
+              - 'elasticloadbalancing:DescribeLoadBalancers'
+              - 'elasticloadbalancing:RegisterInstancesWithLoadBalancer'
+              - 'autoscaling:Describe*'
+              - 'autoscaling:UpdateAutoScalingGroup'
+              - 'autoscaling:EnterStandby'
+              - 'autoscaling:ExitStandby'
+            Resource: '*'
+      Roles:
+        - !Ref awsdhentonEC2Role
+Outputs:
+    MyInstanceProfile:
+        Description: The instance profile to assign to your EC2 instances
+        Value: !Ref awsdhentonEC2InstanceProfile
+        Export: 
+          Name: !Sub "${AWS::StackName}-InstanceProfile"
+    MyInstanceRole:
+        Description: The for your EC2 instances
+        Value: !Ref awsdhentonEC2Role
+        Export: 
+          Name: !Sub "${AWS::StackName}-InstanceRole"

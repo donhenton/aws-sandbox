@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  This will create a pipeline for angular code to an S3 bucket that represents a
+  public website
+Parameters:
+    RepositoryName:
+        Description: GitHub repository name
+        Type: String
+        Default: sec-maint-aws-dhenton
+Resources:
+    StoreBucket:
+        Type: 'AWS::S3::Bucket'
+        DeletionPolicy: Delete
+        Properties:
+            BucketName: !Ref RepositoryName
+Outputs:
+    RepositoryName3:
+        Value:  !Sub 
+            - ${Smurf}-deploy-pipeline
+            - {Smurf: !Ref RepositoryName}
+        Description: Repository Name 3
