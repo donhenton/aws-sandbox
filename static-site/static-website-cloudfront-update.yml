@@ -61,12 +61,12 @@ Resources:
           - Sid: PublicReadForGetBucketObjects
             Effect: Allow
             Principal: '*'
-            Action: 's3:GetObject'
-            Resource: !Join 
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref WebsiteBucket
-                - /*
+            Action: 
+              - 's3:GetObject'
+              - 's3:ListBucket'
+            Resource:  
+              - !Sub '${WebsiteBucket.Arn}/*'
+              - !Sub '${WebsiteBucket.Arn}'
     Metadata:
       'AWS::CloudFormation::Designer':
         id: d37bf877-c1b5-4f9e-b205-48eaab4dfa88
